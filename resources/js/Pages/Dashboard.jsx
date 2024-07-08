@@ -6,7 +6,7 @@ import Yearlychart from './Dashboard/partials/yearly-chart';
 import { ImportApplications } from './Dashboard/partials/importApplications_form';
 
 export default function Dashboard({ auth }) {
-    const {scholarships, totalApplications} = usePage().props;
+    const {scholarships, totalApplications, yearUpdate} = usePage().props;
     const {applications} = usePage().props;
     const {partners} = usePage().props;
 
@@ -171,7 +171,7 @@ export default function Dashboard({ auth }) {
                                         <div className="flex flex-col h-full">
                                             <p className="pt-2 mb-1 font-semibold">Yearly Funds</p>
                                             <h5 className="font-bold">Black Scholars Year over Year funds</h5>
-                                            <Yearlychart />
+                                            <Yearlychart yearUpdate={yearUpdate}/>
                                         </div>
                                         
                                     </div>
@@ -194,10 +194,10 @@ export default function Dashboard({ auth }) {
                                         name="file"
                                         id="file"
                                         accept=".csv"
-                                        className="block w-full rounded-md border-0 py-1.5 mr-4 bg-white text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                        className="block w-full rounded-md border-0 py-1.5 px-4 mr-4 bg-white text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                                         placeholder=""
                                         />
-                                    <button type="submit" className='ml-2 rounded-lg bg-blue-500'>Import CSV</button>
+                                    <button type="submit" className='mt-3 py-1.5 px-3 rounded-lg bg-gradient-to-tl from-red-900 to-red-500 text-white'>Import CSV</button>
                                 </form>
                                 </div>
                                 {/* <a className="mt-auto mb-0 font-semibold leading-normal text-white group text-base" href="javascript:;">

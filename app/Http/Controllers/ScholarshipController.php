@@ -12,6 +12,8 @@ use App\Models\Application;
 use App\Models\Selectioncriteria;
 use App\Models\Requirementcriteria;
 use App\Models\Scholarshipuse;
+use App\Models\Winner;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Arr;
@@ -70,6 +72,7 @@ class ScholarshipController extends Controller {
         $criteria = Selectioncriteria::has('scholarships')->get();
         $requirements = Requirementcriteria::has('scholarships')->get();
         $scholarshipuses = Scholarshipuse::has('scholarships')->get();
+        $winners = Winner::where('scholarship_id', $a)->get();
 
         session([ 'partner_id' => $scholarshipInfo[0]->partner_id]);
         session([ 'scholarshipid' => $scholarshipInfo[0]->id]); 
@@ -80,6 +83,7 @@ class ScholarshipController extends Controller {
             'requirements' => $requirements,
             'scholarshipuses' => $scholarshipuses,
             'criteria' => $criteria,
+            'winners' => $winners,
         ]);
     }
 
@@ -94,7 +98,7 @@ class ScholarshipController extends Controller {
     public function store(Request $request): RedirectResponse {
         $a = $request->all();  //dd($a[2]);
         $partner_id = session('partner_id');
-    
+        $date = new Carbon();
         $b = Scholarship::create([
             'partner_id' => $partner_id,
             'name' => $a[0]['name'],
@@ -104,14 +108,8 @@ class ScholarshipController extends Controller {
             'additional_information' => $a[0]['additional_information'],
             'review_applicants' => 'NO',
             'fund_amount' => $a[0]['fund_amount'],
+            'activeYear' => $date->format('Y'),
         ]);
-        // 'selection_criteria' => $a[1],
-        // 'requirement_criteria' => $a[2],
-        // 'award_based_on' => $a[3],
-        // 'renewability' => $a[4],
-        // 'uses' => $a[5],
-        //dd(Selectioncriteria::find($a[1][0]["id"]));
-        // $a = Selectioncriteria::find($a[1][0]["id"]); 
         $scholarshipInfo = Scholarship::find($b);
         if ($a[1] != null) { 
             foreach ( $a[1] as $a ){
@@ -141,6 +139,13 @@ class ScholarshipController extends Controller {
                 ]);
             }   
         }
+        // update yearly totals
+        $date = new Carbon(); 
+        $currentScholarshipTotal = Scholarship::where('activeYear', $date->format('Y') )->sum('fund_amount');
+        DB::table('yearlytotal')->where('year', $date->format('Y'))->updateOrInsert([
+            'year' => $date->format('Y'),
+            'total' => $currentScholarshipTotal
+        ]);
 
         return to_route('partner.show', $partner_id);
     }
@@ -158,6 +163,7 @@ class ScholarshipController extends Controller {
     public function update(Request $request) {
         $a = $request->all();  //dd($a);
         $b = $a[0];
+        $date = new Carbon();
         // check if data change
         $scholarshipid = session('scholarshipid');
         $scholarshipInfo = Scholarship::find($scholarshipid);
@@ -167,7 +173,7 @@ class ScholarshipController extends Controller {
         if (Arr::exists($b, 'award_payments')) {  $scholarshipInfo->award_payments = $a[0]['award_payments']; }
         if (Arr::exists($b, 'additional_information')) {  $scholarshipInfo->additional_information = $a[0]['additional_information']; }
         if (Arr::exists($b, 'fund_amount')) {  $scholarshipInfo->fund_amount = $a[0]['fund_amount']; }
-
+    
         if ($a[1] != null) { 
             foreach ( $a[1] as $a ){
                 $c = Selectioncriteria::find($a["id"]);
@@ -195,9 +201,24 @@ class ScholarshipController extends Controller {
             }   
         }
 
+        if($scholarshipInfo->activeYear != $date->format('Y')) {
+            DB::table('scholarships')->updateOrInsert([
+                ['activeYear' => $date->format('Y')],
+            ]);
+        }
+
         $scholarshipInfo->save();
-        $partner_id = session('partner_id');
+        $partner_id = session('partner_id'); 
+        $currentScholarshipTotal = Scholarship::where('activeYear', $date->format('Y') )->sum('fund_amount');
+        DB::table('yearlytotal')->where('year', $date->format('Y'))->updateOrInsert([
+            'year' => $date->format('Y'),
+            'total' => $currentScholarshipTotal
+        ]);
         return to_route('partner.show', $partner_id);
+    }
+
+    public function scholarshipWinners(){
+
     }
 
     public function destroy($id){

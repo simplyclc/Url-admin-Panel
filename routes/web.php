@@ -8,6 +8,8 @@ use App\Http\Controllers\RoleController;
 use App\Http\Controllers\ScholarshipController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ImportController;
+use App\Http\Controllers\ScholarController;
+use App\Http\Controllers\WinnerController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -40,7 +42,16 @@ Route::middleware(['auth', 'verified' ])->group(function () {
 
 });
 
-Route::middleware(['auth', 'verified', 'permission:create|edit'])->group(function () { 
+Route::middleware(['auth', 'verified', 'role:scholar|admin'])->group(function (){
+    Route::controller(ScholarController::class)->group(function () {
+        Route::get('scholars/dashboard', 'index')->name('scholar.dashboard');
+        Route::get('scholars/application', 'scholarsApplication')->name('scholar.application');
+        Route::get('scholars/list', 'scholarshipList')->name('scholar.list');
+        Route::post('scholars/application/create', 'storeScholarship')->name('scholar.application.create');
+    });
+});
+
+Route::middleware(['auth', 'verified', 'role:admin|partners'])->group(function () { 
     // Partnersphp artisan
     Route::controller(PartnerController::class)->group(function () {
         Route::get('partner/show{id}', 'show')->name('partner.show');
@@ -59,6 +70,14 @@ Route::middleware(['auth', 'verified', 'permission:create|edit'])->group(functio
         Route::post('scholarship/update', 'update')->name('scholarship.update');
         Route::get('partner/scholarship/delete{id}', 'destroy')->name('scholarship.delete');
     });
+
+    Route::controller(WinnerController::class)->group(function () {
+        Route::get('winners/list', 'index')->name('winners.list');
+        Route::post('create/winner', 'createWinner')->name('create.winner');
+        Route::post('update/winner{winner}', 'updateWinner')->name('update.winner');
+        Route::get('delete/winner{winner}', 'destroy')->name('delete.winner');
+    });
+
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
