@@ -29,6 +29,7 @@ export default function Welcome({ auth, laravelVersion, phpVersion }) {
             
                 </div>
 
+
                 <div className="max-w-7xl mx-auto p-6 lg:p-8">
                     <div className="flex justify-center">
                         <img src="/assets/logos/blackscholarslogo.png" className="inline h-full max-w-full transition-all duration-200 ease-nav-brand max-h-24" alt="main_logo" />
@@ -204,12 +205,30 @@ export default function Welcome({ auth, laravelVersion, phpVersion }) {
                         </div>
                     </div>
 
+                    <div className='mt-8'>
+                        <div className='grid grid-cols-1 sm:grid-cols-12 gap-4'>
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                            <div> <img src="/assets/logos/esl_logo_250x250.png" className="inline h-full max-w-full transition-all duration-200 ease-nav-brand max-h-24" alt="esl_logo" /> </div>
+                            <div> <img src="/assets/logos/urbanleagueRochester.png" className="inline h-full max-w-full transition-all duration-200 ease-nav-brand max-h-24" alt="Urbanleague of Rochester_logo" /> </div>
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                        </div>
+                    </div>
+
+
                     <div className="flex justify-center mt-6 px-2 sm:items-center sm:justify-between">
-                        <div className="text-center text-sm text-gray-800 dark:text-gray-800 sm:text-left">
+                        <div className="text-center text-base text-gray-800 dark:text-gray-800 sm:text-left">
                             <div className="flex items-center gap-4">
                                 <a
                                     href="https://www.urbanleagueroc.org/donate"
-                                    className="group inline-flex text-base items-center hover:text-gray-700 dark:hover:text-gray-700 focus:outline focus:outline-2 focus:rounded-sm focus:outline-red-900"
+                                    className="group inline-flex text-sm items-center hover:text-gray-700 dark:hover:text-gray-700 focus:outline focus:outline-2 focus:rounded-sm focus:outline-red-900"
                                 >
                                     <svg
                                         xmlns="http://www.w3.org/2000/svg"
@@ -224,13 +243,13 @@ export default function Welcome({ auth, laravelVersion, phpVersion }) {
                                             d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z"
                                         />
                                     </svg>
-                                    Donate to the Black Scholars technology program
+                                    <p className="text-4 pt-2">Donate to the Black Scholars technology program</p>
                                 </a>
                             </div>
                         </div>
 
                         <div className="ml-4 text-center text-base text-gray-800 dark:text-gray-800 sm:text-right sm:ml-0">
-                            {/* Laravel v{laravelVersion} (PHP v{phpVersion}) */}
+                            <p className="text-3 pt-2">Developed by WEAREROOTS.ORG</p>
                         </div>
                     </div>
                 </div>
