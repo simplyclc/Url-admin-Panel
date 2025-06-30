@@ -20,8 +20,8 @@ export default function Dashboard({ auth }) {
 
     const secondaryNavigation = [
         { name: 'Account', current: true },
-        { name: 'Application', current: false },
-        { name: 'Scholarship Submission', current: false },
+        { name: 'Application Submitted', current: false },
+        { name: 'Scholarship Submissions', current: false },
       ]
 
     const statuses = {
